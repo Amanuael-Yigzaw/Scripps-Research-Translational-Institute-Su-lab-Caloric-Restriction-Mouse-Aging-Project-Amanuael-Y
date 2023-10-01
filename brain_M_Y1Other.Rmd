@@ -1,0 +1,55 @@
+```{r}
+url= "/Users/amanuaelyigzaw/Desktop/Brain-M-Y-official"
+library(DropletUtils)
+counts=DropletUtils::read10xCounts(url) #get a single cell experiment object
+print(counts)
+library(scuttle)
+qcstats= perCellQCMetrics(counts)
+print(qcstats)
+library_size_per_cell= colSums(assays(counts)[["counts"]])
+print(library_size_per_cell)
+num_genes_per_cell=nexprs(counts)
+print(num_genes_per_cell)
+library(GEOquery)
+library(scater)
+#gse=getGEO("GSM4331852")
+library(scuttle)
+df=perCellQCMetrics(counts)
+print(df)
+summary(df$sum)
+location= rowRanges(counts)
+print(location)
+countss=addPerCellQCMetrics(counts)
+colnames(colData(counts))
+print(countss)
+qc.lib= df$sum
+print(qc.lib)
+data=DataFrame(LibSize=sum(qc.lib),NExprs=sum(qc.nexprs))
+print(data)
+summary(qcstats)
+slotNames(counts)
+str(counts)
+#library(ggplot2)
+library(ggplot2)
+df <- as.data.frame(df)
+ggplot(data=df) + geom_point(mapping=aes(x=total ,y=detected)) + ggtitle("Library Size per cell vs Genes Detected per Cell")
+qcstatss=list("detected"=c(758,497,867,1319,700),"libsize"=c(1878,825,2051,2059,1188))
+dsf=as.data.frame(qcstats)
+dsf$detected[order(dsf$detected)]
+plot(x=rank(dsf$detected)*c(-1), y=dsf$detected, xlab="Rank", xaxt="n", ylab="Genes Detected",col=c("purple"))
+title('Genes detected per cell in Young Male Rat Brain')
+#install.packages("umap")
+#library(ggplot2)
+library(umap)
+dsf=as.data.frame(qcstats)
+
+umaps$layout
+k=5
+umaps<-umap::umap(t(counts(counts)), n_neighbors = k)
+umapGraph=data.frame("PC1" = umaps$layout[,1], "PC2" = umaps$layout[,2])
+library(ggplot2)
+ggplot(umapGraph, aes(x=PC1, y=PC2)) + geom_point() + ggtitle("Young Male Brain UMAP", subtitle = "All genes, default umap parameters")
+
+```
+
+
